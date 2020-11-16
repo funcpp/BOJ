@@ -16,9 +16,9 @@ int main()
 	int left = 1, right = max;
 	int mid;
 	int minmid=987654321;
-	while(left<right)
+	while(left<=right)
 	{
-		mid = (left+right)/2;
+		mid = left+right >> 1;
 		
 		int human=0;
 		for(int i=0; i<M; i++)
@@ -32,7 +32,7 @@ int main()
 		if(isGood)
 		{
 			minmid = mid<minmid ? mid : minmid;
-			right = mid;
+			right = mid-1;
 		}
 		else
 		{

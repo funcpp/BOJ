@@ -47,8 +47,8 @@ void makeSCC(){
 	
 	for(int i=stack.size()-1; i>=0; i--){
 		if(!chk.count(stack[i])){
-			chk[stack[i]]=true;
 			SCC.push_back(vector<int>());
+			chk[stack[i]]=true;
 			dfs2(stack[i], dfs2);
 		}
 	}
@@ -71,10 +71,10 @@ int bfs(int S, int T){
 	unordered_map<int, bool> chk; //S에서 갈수잇는곳인가 ? 
 	vector<int> v(N+5,0);
 	
-	for(int i=0;i<=N;i++){
+	for(int i=1;i<=N;i++){
 		if(!indegree[i]){
 			q.push(i);
-		}	
+		}
 	}
 	
 	v[S] = SCC[S].size();
@@ -83,12 +83,12 @@ int bfs(int S, int T){
 	while(!q.empty()){
 		int frt = q.front(); q.pop();
 		for(int nx : SCCGraph[frt]){
-			if(chk[frt]){
+			if(chk.count(frt)){
 				v[nx] = max(v[nx], v[frt] + (int)SCC[nx].size());
 				chk[nx] = true;
 			}
-			
-			if(!(--indegree[nx])){
+			--indegree[nx];
+			if(!indegree[nx]){
 				q.push(nx);
 			}
 		}
@@ -115,3 +115,4 @@ int main() {
 	
 	return 0;
 }
+

@@ -50,26 +50,18 @@ void makeSCC()
 	}
 }
 
-
-
 int main(){
-	while(~scanf("%d %d",&N,&M)){
+	while(1){
+		scanf("%d %d",&M,&N);
+		if(!N&&!M) break;
 		edge = vector<vector<int>>(N+1<<1, vector<int>());
 		redge = vector<vector<int>>(N+1<<1, vector<int>());
 		SCCN =  vector<int>(N+1<<1, 0);
 		SCC.clear();
 		
-		int sg = trueX(1);
-		edge[notX(sg)].push_back(sg);
-		redge[sg].push_back(notX(sg));
-		
 		for(int i=0;i<M;i++){
 			int a, b;
 			scanf("%d %d",&a,&b);
-			//두 표를 던지는데 그중  최소 1개는 맞아야한다 ( 절이 true여야함 )
-			//의심 = 둘다 틀렸을 떄 = 절이 false
-			//절이 true이려면 모순이 없으면 됨
-			 
 			a = a>0 ? trueX(a) : falseX(-a);
 			b = b>0 ? trueX(b) : falseX(-b);
 			
@@ -89,6 +81,6 @@ int main(){
 				break;
 			}
 		}
-		printf("%s\n", b ?  "yes" : "no");
+		printf("%s\n", b ?  "1" : "0");
 	}
 }

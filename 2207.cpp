@@ -34,7 +34,7 @@ void makeSCC()
 		SCC.back().push_back(idx);
 		SCCN[idx] = SCC.size()-1;
 	};
-	for(int i=2; i<=2*N+1; i++){
+	for(int i=2; i<=2*M+1; i++){
 		if(!chk.count(i)){
 			chk[i]=true;
 			dfs1(i,dfs1);
@@ -53,42 +53,38 @@ void makeSCC()
 
 
 int main(){
-	while(~scanf("%d %d",&N,&M)){
-		edge = vector<vector<int>>(N+1<<1, vector<int>());
-		redge = vector<vector<int>>(N+1<<1, vector<int>());
-		SCCN =  vector<int>(N+1<<1, 0);
-		SCC.clear();
+	scanf("%d %d",&N,&M);
+	edge = vector<vector<int>>(M+1<<1, vector<int>());
+	redge = vector<vector<int>>(M+1<<1, vector<int>());
+	SCCN =  vector<int>(M+1<<1, 0);
+	SCC.clear();
+	
+	for(int i=0;i<N;i++){
+		int a, b;
+		scanf("%d %d",&a,&b);
+		//a번쨰에 true를 / b 번쨰에 false를 낸다 ... 이런식
+		//하나의 절 = (a || ~b) 이런식
+		// 가위바위보의 횟차수 =========== 변수
+		// 가위or바위 == 참트루 or 거짓 
+		 
+		a = a>0 ? trueX(a) : falseX(-a);
+		b = b>0 ? trueX(b) : falseX(-b);
 		
-		int sg = trueX(1);
-		edge[notX(sg)].push_back(sg);
-		redge[sg].push_back(notX(sg));
+		edge[notX(a)].push_back(b);
+		edge[notX(b)].push_back(a);
 		
-		for(int i=0;i<M;i++){
-			int a, b;
-			scanf("%d %d",&a,&b);
-			//두 표를 던지는데 그중  최소 1개는 맞아야한다 ( 절이 true여야함 )
-			//의심 = 둘다 틀렸을 떄 = 절이 false
-			//절이 true이려면 모순이 없으면 됨
-			 
-			a = a>0 ? trueX(a) : falseX(-a);
-			b = b>0 ? trueX(b) : falseX(-b);
-			
-			edge[notX(a)].push_back(b);
-			edge[notX(b)].push_back(a);
-			
-			redge[a].push_back(notX(b));
-			redge[b].push_back(notX(a));	
-		}
-		
-		makeSCC();
-		
-		bool b = true;
-		for(int i=1;i<=N;i++){
-			if(SCCN[trueX(i)] == SCCN[falseX(i)]){
-				b=false;
-				break;
-			}
-		}
-		printf("%s\n", b ?  "yes" : "no");
+		redge[a].push_back(notX(b));
+		redge[b].push_back(notX(a));	
 	}
+	
+	makeSCC();
+	
+	bool b = true;
+	for(int i=1;i<=M;i++){
+		if(SCCN[trueX(i)] == SCCN[falseX(i)]){ //i번째에 한 학생은 뒤지고 한 학생은 사는 경우가 .-... -> 뒤짐 
+			b=false;
+			break;
+		}
+	}
+	printf("%s\n", b ?  "^_^" : "OTL");
 }

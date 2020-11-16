@@ -1,89 +1,46 @@
-
-#include <bits/stdc++.h>
+#include<stdio.h>
+#include<vector>
+#include<algorithm>
 using namespace std;
-
-int minE(vector<int> v)
+int N,K, ans;
+vector<int> v;
+bool can(int c)
 {
-	int ret = 10000000;
-	
-	for(int i=0; i<v.size(); i++)
-	{
-		if(v[i] < ret)
-		{
-			ret = v[i];
+	int now = 0, cnt = 0, m = 1e9;
+	for(int i=0;i<N;i++){
+		if(now + v[i] >=c){
+			cnt++;
+			m=min(m,now+v[i]);
+			now=0;
+			if(cnt>=K){
+				ans=max(ans,m);
+				return true;
+			}
+		}
+		else{
+			now+=v[i];
 		}
 	}
-	return ret;
+	return false;
 }
-	
 int main()
 {
-	int n, k;
-	scanf("%d %d",&n,&k);
-	vector<int> v;
-	int sum[100005]={0,};
-	
-	for(int i=0; i<n; i++)
-	{
-		int t;
-		scanf("%d",&t);
-		v.push_back(t);
-		sum[i]=t;
-		if(i!=0) sum[i] += sum[i-1];
+	scanf("%d %d",&N,&K);
+	v = vector<int>(N+5,0);
+	for(int i=0;i<N;i++){
+		scanf("%d",&v[i]);
 	}
-	
-	//sort(v.begin(),v.end());
-	
-	int ans=0;
-	
-	for(int i=0; i<k-1 i++) // i 시작점 
-	{
-		for(int j=1; j<k; j++) // j 끝점 
-		{
-			if()
+	int left =  0, right = 1e9, mid;
+	while(left <= right){
+		mid = (left+right)/2;
+		//printf("%d %d %d\n",left,right,mid);
+		if(can(mid)){
+			left = mid + 1;
+		}
+		else{
+			right = mid - 1;
 		}
 	}
-	
-	
-	/*
-	do
-	{
-		vector<int> m;
-		for(int j=0; j<k; j++)
-		{
-			int t=0;
-			for(int i=0; i<n/k; i++)
-			{
-				t+=v[i + j*(n/k)];
-				//printf("%d ",i + j*(n/k));
-			}
-			m.push_back(t);
-		}
-		
-		int me=  minE(m);
-		if(ans < me)
-		{
-			ans = me;
-		}
-	}
-	while(next_permutation(v.begin(),v.end()));*/
-	
-	/*vector<int> m;
-	for(int j=0; j<k; j++)
-	{
-		int t=0;
-		for(int i=0; i<n/k; i++)
-		{
-			t+=v[i + j*(n/k)];
-		}
-		m.push_back(t);
-	}
-	
-	int me=  minE(m);
-	ans=me;*/
-	
 	printf("%d",ans);
-	
-	
 	return 0;
 }

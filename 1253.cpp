@@ -1,40 +1,30 @@
-#include <stdio.h>
-#include <algorithm>
-#include <vector>
-#include <unordered_map>
+#include <bits/stdc++.h>
 using namespace std;
-
-int N;
-vector<int> v;
-
 int main()
 {
+	int N;
 	scanf("%d",&N);
-	
-	for(int i=0; i<N; i++)
-	{
-		int a;
-		scanf("%d",&a);
-		
-		v.push_back(a);
+	vector<int> v = vector<int>(N,0);
+	for(int i=0;i<N;i++){
+		scanf("%d",&v[i]);
 	}
+	sort(v.begin(), v.end());
 	
-	int cnt = 0;
-	unordered_map<int,bool> m;
-	for(int i=0; i<N; i++)
-	{
-		for(int j=i+1; j<N; j++)
-		{
-			if(!m.count(v[i]+v[j]))
-			{
-				m[v[i]+v[j]]=true;
-				auto it = lower_bound(v.begin(), v.end(), v[i]+v[j]);
-				auto it2 = upper_bound(v.begin(), v.end(), v[i]+v[j]);
-				cnt+=(it2-it);
+	int ans = 0;
+	for(auto it = v.begin(); it!=v.end();it++){
+		bool b=false;
+		for(auto it2 = v.begin(); it2!=v.end(); it2++){
+			for(auto it3=lower_bound(v.begin(), v.end(), *it - *it2);it3!=v.end();it3++){
+				if(*it3!=*it-*it2) break;
+				if(it3!=it2 && it!=it2 && it!=it3){
+					b=true;
+					break;
+				}
 			}
+			if(b) break;
 		}
+		if(b) ans++;
 	}
-	printf("%d",cnt);
-	
+	printf("%d",ans);
 	return 0;
 }

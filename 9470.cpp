@@ -1,63 +1,58 @@
 #include <stdio.h>
 #include <vector>
+#include <unordered_map>
 #include <queue>
-#include <map>
+#include <utility>
 using namespace std;
-
-int T;
+#define pii pair<int, int>
 int main()
 {
+	int T;
 	scanf("%d",&T);
-	while(T--)
-	{
-		vector<int> v[1005];
-		int cnt[1005]={0,};
-		map<int,int> chk[1005];
-		
+	while(T--){
 		int K,M,P;
 		scanf("%d %d %d",&K,&M,&P);
-		for(int i=1; i<=P; i++)
-		{
-			int a,b;
-			scanf("%d %d",&a,&b);
-			v[a].push_back(b);
-			cnt[b]++;
+		vector<vector<int>> edge = vector<vector<int>>(M+5, vector<int>());
+		vector<int> ind = vector<int>(M+5, 0);
+		while(P--){
+			int A,B;
+			scanf("%d %d",&A,&B);
+			
+			edge[A].push_back(B);
+			ind[B]++;
 		}
+		
+		vector<pii> ans = vector<pii>(M+5, pii());
 		queue<int> q;
-		int ans[1005]={0,};
-		for(int i=1; i<=M; i++)
-		{
-			if(!cnt[i])
-			{
-				ans[i]=1;
+		for(int i=1;i<=M;i++){
+			if(!ind[i]){
 				q.push(i);
+				ans[i].first=1;
+				ans[i].second=1;
 			}
 		}
 		
-		while(!q.empty())
-		{
-			int x = q.front(); q.pop();
-			
-			for(int i=0; i<v[x].size(); i++)
-			{
-				int nx = v[x][i];
-				
-				ans[nx]=max(ans[nx],ans[x]);
-				chk[nx][ans[nx]]++;
-				
-				cnt[nx]--;
-				
-				if(!cnt[nx])
+		while(q.size()){
+			int frt = q.front(); q.pop();
+			for(int nx : edge[frt]){
+				--ind[nx];
+				if(ans[nx].first < ans[frt].first)
 				{
-					q.push(nx);
+					ans[nx].first = ans[frt].first;
+					ans[nx].second = 1;
+				}
+				else if(ans[nx].second ==1 && ans[nx].first == ans[frt].first){
 					
-					if(chk[nx][ans[nx]] >=2) ans[nx]=ans[x]+1;
-					else ans[nx]=ans[x];
+					ans[nx].first++;
+					ans[nx].second++;
+				}
+				
+				if(!ind[nx]){
+					q.push(nx);
 				}
 			}
 		}
-		
-		printf("%d %d\n",K,ans[M]);
+		printf("%d %d\n",K,ans[M].first);
 	}
 	return 0;
 }
