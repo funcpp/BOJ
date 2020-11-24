@@ -112,18 +112,6 @@ int main() {
 		}
 	}
 	
-	/*auto foo = [&](int idx, double cur, int curc, auto foo) -> double{
-		if(idx==N) return cur/curc;
-		
-		if(cost[idx]){
-			return min(foo(idx+1, cur+cost[idx], curc+1, foo), foo(idx+1, cur, curc, foo));
-		}else{
-			return foo(idx+1, cur, curc, foo);
-		}
-	};
-	
-	printf("%.11lf", foo(0, ans, cnt, foo));
-	*/
 	printf("%.11lf",(double)ans/(double)cnt);
 	
 	return 0;
