@@ -1,30 +1,21 @@
-#include <stdio.h>
-int max(int a, int b);
+#include<bits/stdc++.h>
+using namespace std;
 int main()
 {
-	int n,maxn=0,jump=0;
+	int n;
 	scanf("%d",&n);
-	int num[301]={0};
-	int plus[301]={0};
-	for(int i=1; i<=n; i++)
-	{
-		scanf("%d",num+i);
-		//plus[i]=num[i];
+	int dp[n+5]={0,};
+	int arr[n+5]={0,};
+	for(int i=1;i<=n;i++){
+		scanf("%d",arr+i);
 	}
-	
-	plus[1]=num[1];
-	plus[2]=max(num[1] + num[2],num[2]);
-	plus[3]=max(num[1]+num[3],num[2]+num[3]);
-	
-	for(int i=4; i<=n; i++)
-	{
-		plus[i]+=max(plus[i-3]+num[i-1]+num[i],plus[i-2]+num[i]);
+	dp[0]=0;
+	dp[1]=arr[1];
+	dp[2]=dp[1]+arr[2];
+	dp[3]=max(arr[1], arr[2])+arr[3];
+	for(int i=4;i<=n;i++){
+		dp[i]=max(dp[i-3]+arr[i-1]+arr[i],dp[i-2]+arr[i]);
 	}
-	printf("%d",plus[n]>=plus[3] ? plus[n] : plus[3]);
+	printf("%d",dp[n]);
 	return 0;
-}
-
-int max(int a, int b)
-{
-	return a>b ? a : b;
 }

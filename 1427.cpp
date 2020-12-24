@@ -1,23 +1,14 @@
-#include <stdio.h>
-#include <string.h>
-#include <algorithm>
-
-int main()
-{
-	char s[15];
-	scanf("%s",s);
-	
-	int len = strlen(s);
-	int num[len];
-	for(int i=0; i<len; i++)
-	{
-		num[i]=s[i]-'0';
+#include<bits/stdc++.h>
+int main(){
+	int n;
+	scanf("%d",&n);
+	std::vector<int> v;
+	while(n){
+		v.push_back(n%10);
+		n/=10;
 	}
-	
-	std::sort(num,num+len);
-	for(int i=len-1; i>=0; i--)
-	{
-		printf("%d",num[i]);
+	std::sort(v.begin(), v.end());
+	for(auto it =v.end()-1;it>=v.begin();it--){
+		printf("%d",*it);
 	}
-	return 0;
-} 
+}
