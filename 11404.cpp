@@ -1,44 +1,41 @@
-#include <stdio.h>
-#include <memory.h>
-#define min(a,b) a<b?a:b;
-
-int line[105][105];
+#include<bits/stdc++.h>
+using namespace std;
 int main()
 {
 	int n,m;
-	scanf("%d",&n);
-	scanf("%d",&m);
-	for(int i=0; i<m; i++)
+	scanf("%d %d",&n,&m);
+	
+	int floyd[105][105]={0,};
+	
+	for(int i=0;i<=n;i++){
+		for(int j=0;j<=n;j++){
+			floyd[i][j]=0x7f7f7f7f;
+			if(i==j) floyd[i][j]=0;
+		}
+	}
+	
+	for(int i=0;i<m;i++)
 	{
 		int a,b,c;
 		scanf("%d %d %d",&a,&b,&c);
-		if(!line[a][b]) line[a][b]=c;
-		else line[a][b]=min(line[a][b],c);
+		
+		floyd[a][b]=min(floyd[a][b],c);
 	}
 	
-	for(int j=1; j<=n; j++)
-	{
-		for(int i=1; i<=n; i++)
-		{
-			if(!line[i][j]) continue;
-			for(int k=1; k<=n; k++)
-			{
-				if(!line[j][k]) continue;
-				if(i==k) continue;
-				
-				if(!line[i][k]) line[i][k]=line[i][j]+line[j][k];
-				else line[i][k]=min(line[i][k],line[i][j]+line[j][k]);
+	for(int j=1;j<=n;j++){
+		for(int i=1;i<=n;i++){
+			for(int k=1;k<=n;k++){
+				if(floyd[i][j]!=0x7f7f7f7f && floyd[j][k]!=0x7f7f7f7f){
+					floyd[i][k]=min(floyd[i][k],floyd[i][j]+floyd[j][k]);
+				}
 			}
 		}
 	}
 	
-	for(int i=1; i<=n; i++)
-	{
-		for(int j=1; j<=n; j++)
-		{
-			printf("%d ",line[i][j]);
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<=n;j++){
+			printf("%d ",floyd[i][j]==0x7f7f7f7f?0:floyd[i][j]);
 		}
 		printf("\n");
 	}
-	return 0;
 }

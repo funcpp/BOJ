@@ -1,37 +1,33 @@
-#include <stdio.h>
-int n,m;
-int line[1005][1005];
-int check[1005];
-void dfs(int idx)
-{
-	check[idx]=1;
-	for(int i=1; i<=n; i++)
-	{
-		if(line[idx][i] && !check[i])
-		{
-			dfs(i);
-		}
-	}
-}
-
+#include<bits/stdc++.h>
+using namespace std;
+vector<int> ed[1005];
 int main()
 {
-	int ans=0;
-	
+	int n,m;
 	scanf("%d %d",&n,&m);
-	for(int i=0; i<m; i++)
-	{
+	for(int i=0;i<m;i++){
 		int u,v;
 		scanf("%d %d",&u,&v);
-		line[u][v]=1;
-		line[v][u]=1;
+		ed[u].push_back(v);
+		ed[v].push_back(u);
 	}
 	
-	for(int i=1; i<=n; i++)
+	unordered_map<int,bool> chk;
+	auto dfs = [&](int idx, auto dfs) -> void
 	{
-		if(!check[i])
-		{
-			dfs(i);
+		for(int nx : ed[idx]){
+			if(!chk.count(nx)){
+				chk[nx]=true;
+				dfs(nx,dfs);
+			}
+		}
+	};
+	
+	int ans=0;
+	for(int i=1;i<=n;i++){
+		if(!chk.count(i)){
+			chk[i]=true;
+			dfs(i,dfs);
 			ans++;
 		}
 	}

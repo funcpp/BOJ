@@ -1,29 +1,24 @@
-#include <stdio.h>
-
-int max(int a, int b)
-{
-    return a > b ? a : b;
-}
-
+#include<bits/stdc++.h>
+using namespace std;
 int main()
 {
-	int n;
-	scanf("%d",&n);
-	int dp[n+1]={0,}, wine[n+1]={0,};
-	for(int i=1; i<=n; i++)
+	int N;
+	scanf("%d",&N);
+	int A[N+5]={0,};
+	for(int i=1;i<=N;i++)
 	{
-		scanf("%d",&wine[i]);
-	}
-	dp[1]=wine[1];
-	if(n!=1)
-	{
-		dp[2]=wine[1]+wine[2];
+		scanf("%d",A+i);
 	}
 	
-	for(int i=3; i<=n; i++)
-	{
-		dp[i]=max(dp[i-1],max(dp[i-2]+wine[i],dp[i-3]+wine[i-1]+wine[i]));
+	int dp[N+5]={0,};
+	dp[0]=0;
+	dp[1]=A[1];
+	dp[2]=dp[1]+A[2];
+	for(int i=3;i<=N;i++){
+		dp[i]=max(max(dp[i-3]+A[i]+A[i-1], dp[i-2]+A[i]), dp[i-1]);
+
 	}
-	printf("%d",dp[n]);
+	printf("%d",dp[N]);
+		
 	return 0;
 }

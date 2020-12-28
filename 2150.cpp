@@ -1,95 +1,76 @@
-#include <stdio.h>
-#include <vector>
-#include <map>
-#include <algorithm>
+#include<bits/stdc++.h>
 using namespace std;
-
-vector<int> graph[10005];
-vector<int> rgraph[10005];
-vector<int> stack;
-map<int, bool> visited;
-	
-int V,E;
-
-void dfs(int x)
-{
-	visited[x]=true;
-	
-	for(int i=0; i<graph[x].size(); i++)
-	{
-		int nx = graph[x][i];
-		
-		if(!visited[nx]) dfs(nx);
-	}
-	
-	stack.push_back(x);
-	
-	return;
-}
-
-void dfs_r(int x, vector<int>& ans)
-{
-	ans.push_back(x);
-	
-	visited[x]=true;
-	
-	for(int i=0; i<rgraph[x].size(); i++)
-	{
-		int nx = rgraph[x][i];
-		
-		if(!visited[nx]) dfs_r(nx,ans);
-	}
-	
-	return;
-}
-
+vector<vector<int> > edge, redge;
 int main()
 {
+	int V,E;
 	scanf("%d %d",&V,&E);
-	while(E--)
-	{
-		int to,from;
-		scanf("%d %d",&to,&from);
-		graph[to].push_back(from);
-		rgraph[from].push_back(to);
+	
+	edge = vector<vector<int> >(V+5, vector<int>());
+	redge = vector<vector<int> >(V+5, vector<int>());
+		
+	for(int i=0;i<E;i++){
+		int A,B;
+		scanf("%d %d",&A,&B);
+		
+		edge[A].push_back(B);
+		redge[B].push_back(A);
 	}
 	
-	for(int i=1; i<=V; i++)
+	unordered_map<int, bool> chk;
+	vector<int> st;
+	auto dfs = [&](int idx, auto dfs) -> void
 	{
-		if(!visited[i])
+		for(int nx : edge[idx])
 		{
-			dfs(i);
+			if(!chk.count(nx)){
+				chk[nx]=true;
+				dfs(nx,dfs);
+			}
+		}
+		st.push_back(idx);
+	};
+	
+	vector<vector<int> > SCC;
+	auto rdfs = [&](int idx, auto rdfs) -> void
+	{
+		for(int nx : redge[idx])
+		{
+			if(!chk.count(nx)){
+				chk[nx]=true;
+				rdfs(nx,rdfs);
+			}
+		}
+		SCC.back().push_back(idx);
+	};
+	
+	
+	for(int i=1;i<=V;i++){
+		if(!chk.count(i))
+		{
+			chk[i]=true;
+			dfs(i,dfs);
 		}
 	}
 	
-	//for(int i=0; i<V; i++) printf("%d ",stack[i]);
-	
-	visited.clear();
-	vector<vector<int> > SCC;
-	for(int i=V-1; i>=0; i--)
-	{
-		if(visited[stack[i]]) continue;
-		vector<int> comp;
-		dfs_r(stack[i], comp);
-		
-		sort(comp.begin(),comp.end());
-		SCC.push_back(comp);
+	chk.clear();
+	for(int i=st.size()-1;i>=0;i--){
+		if(!chk.count(st[i]))
+		{
+			SCC.push_back(vector<int>());
+			chk[st[i]]=true;
+			rdfs(st[i], rdfs);
+			sort(SCC.back().begin(), SCC.back().end());
+		}
 	}
 	
-	sort(SCC.begin(), SCC.end(), [](vector<int> a, vector<int> b) -> bool
-	{
-		return a[0]<b[0];	
-	});
-	
 	printf("%d\n",SCC.size());
-	for(int i=0; i<SCC.size(); i++)
-	{
-		for(int k=0; k<SCC[i].size(); k++)
-		{
-			printf("%d ",SCC[i][k]);
+	sort(SCC.begin(), SCC.end());
+	for(auto compo : SCC){
+		for(int i : compo){
+			printf("%d ",i);
 		}
 		printf("-1\n");
 	}
-	
 	return 0;
 }
