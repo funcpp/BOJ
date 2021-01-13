@@ -1,33 +1,38 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 int main()
 {
 	int N,K;
 	scanf("%d %d",&N,&K);
-	vector<int> H,P;
-	char str[20005]={0,};
-	scanf("%s",str);
+	
+	string s;
+	cin>>s;
+	vector<int> ham;
+	vector<int> per;
+	
 	for(int i=0;i<N;i++){
-		if(str[i]=='H')H.push_back(i);
-		else if(str[i]=='P')P.push_back(i);
+		if(s[i]=='H') ham.push_back(i);
+		else per.push_back(i);
 	}
 	
-	auto pit = P.begin();
-	auto hit = H.begin();
-	int ans = 0;
-	while(pit!=P.end() && hit!=H.end()){
-		int dist =  abs(*pit - *hit);
-		if(dist <= K){
-			hit++;
-			pit++;
+	int hamptr=0, perptr=0;
+	int ans=0;
+	while(true){
+		if(hamptr>=ham.size() || perptr>=per.size()) break;
+		int d = abs(per[perptr]-ham[hamptr]);
+		if(d<=K)
+		{
 			ans++;
-		}else{
-			if(*pit>*hit)
-				hit++;
-			else
-				pit++;
+			perptr++;
+			hamptr++;
+		}
+		else
+		{
+			if(per[perptr]>ham[hamptr]) hamptr++;
+			else perptr++;
 		}
 	}
 	printf("%d",ans);
+	
 	return 0;
 }

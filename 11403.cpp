@@ -1,44 +1,30 @@
-#include <stdio.h>
-#include <memory.h>
-
-int n;
-int line[105][105];
-int check[105];
-
-void dfs(int idx)
-{
-	//check[idx]=1;
-	for(int i=0; i<n; i++)
-	{
-		//if(i==idx) continue;
-		if(!check[i] && line[idx][i])
-		{
-			check[i]=1;
-			dfs(i);
-		}
-	}
-}
-
+#include<bits/stdc++.h>
+using namespace std;
+int arr[105][105]={0,};
 int main()
 {
-	scanf("%d",&n);
-	for(int i=0; i<n; i++)
-	{
-		for(int j=0; j<n; j++)
-		{
-			scanf("%d",&line[i][j]);
+	int N;
+	scanf("%d",&N);
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++){
+			scanf("%d",&arr[i][j]);
 		}
 	}
 	
-	for(int i=0; i<n; i++)
-	{
-		dfs(i);
-		
-		for(int j=0; j<n; j++)
-		{
-			printf("%d ",check[j]);
+	for(int j=0;j<N;j++){
+		for(int i=0;i<N;i++){
+			for(int k=0;k<N;k++){
+				if(arr[i][j] && arr[j][k]) arr[i][k]=1;
+			}
+		}
+	}
+	
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++){
+			printf("%d ",arr[i][j]);
 		}
 		printf("\n");
-		memset(check,0,sizeof(check));
 	}
+	
+	return 0;
 }

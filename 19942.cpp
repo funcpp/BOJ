@@ -1,71 +1,70 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-int N, m[4];
-
-struct st
+int N;
+struct comb
 {
-	int a,b,c,d,s;
-	st()
+	int mp,mf,ms,mv, cost;
+	
+	comb operator +(const struct comb& c)
 	{
-		a=0,b=0,c=0,d=0,s=0;
+		return {mp+c.mp,mf+c.mf,ms+c.ms,mv+c.mv,cost+c.cost};
 	}
-	st(int A, int B, int C, int D, int S) : a(A), b(B), c(C), d(D), s(S) {};
-	
-	st operator+(const struct st& v){
-		return st(this->a+v.a, this->b+v.b, this->c+v.c,this->d+v.d,this->s+v.s);
-	}
-	
 };
 
-st s[0x10];
-int mCost = 0x7f7f7f7f;
-vector<vector<int>> ans;
-
-void f(int idx, vector<int> selected, st cur)
+int ans_cost=0x7f7f7f7f;
+vector<vector<int> >ans;
+comb limit;
+vector<comb> cbs;
+void f(int idx, comb cur, vector<int> a)
 {
-	if(cur.a>=m[0]&&cur.b>=m[1]&&cur.c>=m[2]&&cur.d>=m[3])
-	{
-		if(cur.s == mCost) {
-			ans.push_back(selected);
-		}
-		else if(cur.s < mCost){
-			mCost=cur.s;
-			ans.clear();
-			ans.push_back(selected);
-		}
-		return;
-	}
-	if(idx==N) return;
+	if(idx>N) return;
+	if(cur.cost>ans_cost)return;
 	
-	selected.push_back(idx);
-	f(idx+1,selected,cur+s[idx]);
-	selected.pop_back();
-	f(idx+1,selected,cur);
+	if(cur.mp>=limit.mp&&cur.mf>=limit.mf&&cur.ms>=limit.ms&&cur.mv>=limit.mv)
+	{
+		if(cur.cost == ans_cost)
+		{
+			ans.push_back(a);
+		}
+		else if(cur.cost < ans_cost)
+		{
+			ans_cost =cur.cost;
+			ans.clear();
+			ans.push_back(a);
+		}
+	}
+	
+	a.push_back(idx);
+	f(idx+1,cur+cbs[idx], a);
+	a.pop_back();
+	f(idx+1,cur, a);
+	return;
 }
-
-
 
 int main()
 {
 	scanf("%d",&N);
-	for(auto it=m;it!=m+4;it++){
-		scanf("%d",it);
+	scanf("%d %d %d %d",&limit.mp,&limit.mf,&limit.ms,&limit.mv);
+	
+	for(int i=0;i<N;i++)
+	{
+		comb c;
+		scanf("%d %d %d %d %d",&c.mp,&c.mf,&c.ms,&c.mv,&c.cost);
+		cbs.push_back(c);
 	}
 	
-	for(int i=0;i<N;i++){
-		scanf("%d %d %d %d %d",&s[i].a,&s[i].b,&s[i].c,&s[i].d,&s[i].s);
-	}
+	f(0,{0,0,0,0,0}, vector<int>());
 	
-	f(0,vector<int>(), st());
-	
-	if(ans.size()){
-		sort(ans.begin(),ans.end());
-		printf("%d\n",mCost);
-		for(int p : ans[0]){
-			printf("%d ",p+1);
-		}
-	}else{
+	if(ans_cost==0x7f7f7f7f)
 		printf("-1");
+	else
+	{
+		printf("%d\n",ans_cost);
+		sort(ans.begin(), ans.end());
+		for(auto b:ans[0])
+		{
+			printf("%d ",b+1);
+		}
 	}
 	return 0;
 }
