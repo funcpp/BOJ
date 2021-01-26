@@ -1,94 +1,53 @@
-#include <stdio.h>
-int n;
-int map[105][105];
-int pmap[105][105];
+#include<bits/stdc++.h>
+using namespace std;
+int N;
+int arr[105][105];
+map<pair<int, int>, bool> chk;
+int dx[4]={1,-1,0,0};
+int dy[4]={0,0,1,-1};
 
-int maxh, minh=987654;
-int cnt=1;
-
-int dx[4] = {1,-1,0,0};
-int dy[4] = {0,0,1,-1};
-
-void pr()
-{
-	printf("\n");
-	for(int i=0; i<n; i++)
-	{
-		for(int j=0;j <n;j ++)
-		{
-			printf("%8d ",pmap[i][j]);
-		}
-		printf("\n");
-	}
-	return;
-}
-
-void dfs(int x, int y)
-{
-	pmap[x][y]=cnt;
-	
-	for(int i=0; i<4; i++)
-	{
+void dfs(int x, int y, int h){
+	for(int i=0;i<4;i++){
 		int nx = x + dx[i];
 		int ny = y + dy[i];
 		
-		if(nx>=0 && nx<n && ny>=0 && ny<n)
-		{
-			if(pmap[nx][ny]==0)	dfs(nx,ny);
+		if(0<=nx&&nx<N&&0<=ny&&ny<N&&!chk[{nx,ny}]&&arr[nx][ny]>h){
+			chk[{nx,ny}]=1;
+			dfs(nx,ny,h);
 		}
 	}
-}
-
-int count()
-{
-	cnt=1;
-	for(int i=0; i<n; i++)
-	{
-		for(int j=0; j<n; j++)
-		{
-			if(pmap[i][j]==0)
-			{
-				dfs(i,j);
-				cnt++;
-			}
-		}
-	}
-	return cnt-1;
 }
 
 int main()
 {
-	scanf("%d",&n);
-	for(int i=0; i<n; i++)
-	{
-		for(int j=0; j<n; j++)
-		{
-			scanf("%d",&map[i][j]);
-			maxh = maxh < map[i][j] ? map[i][j] : maxh;
-			minh = map[i][j] < minh ? map[i][j] : minh;
+	scanf("%d",&N);
+	int low=0x7f7f7f7f, high=0;
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++){
+			scanf("%d",&arr[i][j]);
+			low=min(low,arr[i][j]);
+			high=max(high,arr[i][j]);
 		}
 	}
 	
-	int ans = 1;
-	
-	for(int i=minh; i<maxh; i++)
-	{
-		for(int a=0; a<n; a++)
-		{
-			for(int b=0; b<n; b++)
-			{
-				pmap[a][b] = map[a][b] <= i ? 987654 : 0; //Àá°äÀ¸¸é Á¿°°Àº¼ıÀÚ 
+	int ans = 0;
+	for(int k=low;k<=high;k++){
+		chk.clear();
+		
+		int cnt = 0;
+		
+		for(int i=0;i<N;i++){
+			for(int j=0;j<N;j++){
+				if(!chk[{i,j}]&&arr[i][j]>k){
+					chk[{i,j}]=1;
+					dfs(i,j,k);
+					cnt++;
+				}
 			}
 		}
 		
-		int c= count();
-		//pr();
-		
-		//if(c!=n*n)
-		ans = ans < c ? c : ans;
-		
+		ans=max(ans,cnt);
 	}
-	
 	
 	printf("%d",ans);
 	
